@@ -17,7 +17,7 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.Model
 
         public Person() { }
 
-        public Person(int id, int roleId, string firstName, string lastName, DateTime birthday)
+        public Person(int id, int roleId, string firstName, string lastName, string birthday)
         {
             this.Id = id;
             this.RoleId = roleId;
