@@ -15,7 +15,7 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.Model
         public string LastName { get; set; }
         public string Birthday { get; set; } // Изменено с DateTime на string
 
-        public Person() { }
+        public Person() { }// Пустой конструктор для десериализации JSON
 
         public Person(int id, int roleId, string firstName, string lastName, string birthday)
         {
