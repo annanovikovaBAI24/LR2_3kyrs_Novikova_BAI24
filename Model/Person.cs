@@ -13,7 +13,7 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.Model
         public int RoleId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime Birthday { get; set; }
+        public string Birthday { get; set; } // Изменено с DateTime на string
 
         public Person() { }
 
@@ -48,7 +48,7 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.Model
             person.RoleId = roleId;
             person.FirstName = personDpo.FirstName;
             person.LastName = personDpo.LastName;
-            person.Birthday = personDpo.Birthday;
+            person.Birthday = personDpo.Birthday; // Теперь присваиваем строку
             return person;
         }
     }
