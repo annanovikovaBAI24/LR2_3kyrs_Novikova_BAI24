@@ -1,7 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using Newtonsoft.Json; // Подключаем библиотеку для JSON
 using LR1_3kyrs_NOVIKOVA_BAI24.Helper;
 using LR1_3kyrs_NOVIKOVA_BAI24.Model;
 using LR1_3kyrs_NOVIKOVA_BAI24.View;
@@ -10,14 +13,12 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
 {
     public class RoleViewModel : INotifyPropertyChanged
     {
-        /// <summary>
-        /// выбранная в списке должность
-        /// </summary>
-        private Role selectedRole;
+    
+        readonly string path = @"C:\Users\Anna\OneDrive\Desktop\вп 3 курс\LR1_3kyrs_Novikova_BAI24\DataModels\RoleData.json";
 
-        /// <summary>
-        /// выбранная в списке должность
-        /// </summary>
+        public ObservableCollection<Role> ListRole { get; set; } = new ObservableCollection<Role>();
+
+        private Role selectedRole;
         public Role SelectedRole
         {
             get { return selectedRole; }
@@ -29,51 +30,58 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
             }
         }
 
-        /// <summary>
-        /// коллекция должностей сотрудников
-        /// </summary>
-        public ObservableCollection<Role> ListRole { get; set; } = new ObservableCollection<Role>();
+        public string Error { get; set; }
+        string _jsonRoles = String.Empty;
 
         public RoleViewModel()
         {
-            this.ListRole.Add(new Role
-            {
-                Id = 1,
-                NameRole = "Директор"
-            });
-            this.ListRole.Add(new Role
-            {
-                Id = 2,
-                NameRole = "Бухгалтер"
-            });
-            this.ListRole.Add(new Role
-            {
-                Id = 3,
-                NameRole = "Менеджер"
-            });
+            ListRole = LoadRole(); // Загружаем данные при старте
         }
 
-        /// <summary>
-        /// Нахождение максимального Id в коллекции
-        /// </summary>
-        /// <returns></returns>
+        // Метод загрузки из JSON
+        public ObservableCollection<Role> LoadRole()
+        {
+            if (!File.Exists(path))
+            {
+                return new ObservableCollection<Role>(); // Если файла нет, возвращаем пустоту
+            }
+            _jsonRoles = File.ReadAllText(path);
+            if (_jsonRoles != null)
+            {
+                ListRole = JsonConvert.DeserializeObject<ObservableCollection<Role>>(_jsonRoles);
+                return ListRole;
+            }
+            return null;
+        }
+
+        // Метод сохранения в JSON
+        private void SaveChanges(ObservableCollection<Role> listRole)
+        {
+            var jsonRole = JsonConvert.SerializeObject(listRole);
+            try
+            {
+                using (StreamWriter writer = File.CreateText(path))
+                {
+                    writer.Write(jsonRole);
+                }
+            }
+            catch (IOException e)
+            {
+                Error = "Ошибка записи json файла \n" + e.Message;
+            }
+        }
+
         public int MaxId()
         {
             int max = 0;
             foreach (var r in this.ListRole)
             {
-                if (max < r.Id)
-                {
-                    max = r.Id;
-                }
-                ;
+                if (max < r.Id) { max = r.Id; }
             }
             return max;
         }
 
-        // команда добавления новой должности
         private RelayCommand addRole;
-
         public RelayCommand AddRole
         {
             get
@@ -81,17 +89,14 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
                 return addRole ??
                 (addRole = new RelayCommand(obj =>
                 {
-                    WindowNewRole wnRole = new WindowNewRole
-                    {
-                        Title = "Новая должность",
-                    };
-                    // формирование кода новой должности
+                    WindowNewRole wnRole = new WindowNewRole { Title = "Новая должность" };
                     int maxIdRole = MaxId() + 1;
                     Role role = new Role { Id = maxIdRole };
                     wnRole.DataContext = role;
-                    if (wnRole.ShowDialog() == true)// Открываем окно, если "Сохранить" — добавляем в ListRole
+                    if (wnRole.ShowDialog() == true)
                     {
                         ListRole.Add(role);
+                        SaveChanges(ListRole); // Сохраняем в JSON после добавления
                     }
                     SelectedRole = role;
                 }));
@@ -99,26 +104,22 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
         }
 
         private RelayCommand editRole;
-
-        public RelayCommand EditRole// EditRole — команда редактирования
+        public RelayCommand EditRole
         {
             get
             {
                 return editRole ??
                 (editRole = new RelayCommand(obj =>
                 {
-                    WindowNewRole wnRole = new WindowNewRole
-                    {
-                        Title = "Редактирование должности",
-                    };
+                    WindowNewRole wnRole = new WindowNewRole { Title = "Редактирование должности" };
                     Role role = SelectedRole;
                     Role tempRole = new Role();
                     tempRole = role.ShallowCopy();
                     wnRole.DataContext = tempRole;
                     if (wnRole.ShowDialog() == true)
                     {
-                        // сохранение данных 
                         role.NameRole = tempRole.NameRole;
+                        SaveChanges(ListRole); // Сохраняем в JSON после редактирования
                     }
                 },
                 (obj) => SelectedRole != null && ListRole.Count > 0));
@@ -126,7 +127,6 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
         }
 
         private RelayCommand deleteRole;
-
         public RelayCommand DeleteRole
         {
             get
@@ -141,6 +141,7 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
                     if (result == MessageBoxResult.OK)
                     {
                         ListRole.Remove(role);
+                        SaveChanges(ListRole); // Сохраняем в JSON после удаления
                     }
                 },
                 (obj) => SelectedRole != null && ListRole.Count > 0));
@@ -148,7 +149,6 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
