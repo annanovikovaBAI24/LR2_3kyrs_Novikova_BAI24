@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using Newtonsoft.Json; // Подключаем библиотеку для JSON
+using Newtonsoft.Json; 
 using LR1_3kyrs_NOVIKOVA_BAI24.Helper;
 using LR1_3kyrs_NOVIKOVA_BAI24.Model;
 using LR1_3kyrs_NOVIKOVA_BAI24.View;
@@ -13,20 +13,19 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
 {
     public class RoleViewModel : INotifyPropertyChanged
     {
-    
+        // Полный путь к файлу данных с должностями
         readonly string path = @"C:\Users\Anna\OneDrive\Desktop\вп 3 курс\LR1_3kyrs_Novikova_BAI24\DataModels\RoleData.json";
 
         public ObservableCollection<Role> ListRole { get; set; } = new ObservableCollection<Role>();
 
         private Role selectedRole;
+        // Свойство для хранения выбранной в таблице должности
         public Role SelectedRole
         {
             get { return selectedRole; }
             set
             {
-                selectedRole = value;
-                OnPropertyChanged("SelectedRole");
-                EditRole.CanExecute(true);
+                selectedRole = value; OnPropertyChanged("SelectedRole"); EditRole.CanExecute(true);
             }
         }
 
@@ -45,10 +44,10 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
             {
                 return new ObservableCollection<Role>(); // Если файла нет, возвращаем пустоту
             }
-            _jsonRoles = File.ReadAllText(path);
+            _jsonRoles = File.ReadAllText(path);// Читаем весь текст из файла
             if (_jsonRoles != null)
             {
-                ListRole = JsonConvert.DeserializeObject<ObservableCollection<Role>>(_jsonRoles);
+                ListRole = JsonConvert.DeserializeObject<ObservableCollection<Role>>(_jsonRoles);// Превращаем текст JSON обратно в коллекцию объектов Role
                 return ListRole;
             }
             return null;
@@ -57,10 +56,10 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
         // Метод сохранения в JSON
         private void SaveChanges(ObservableCollection<Role> listRole)
         {
-            var jsonRole = JsonConvert.SerializeObject(listRole);
+            var jsonRole = JsonConvert.SerializeObject(listRole);// Превращаем коллекцию объектов в текстовую строку JSON
             try
             {
-                using (StreamWriter writer = File.CreateText(path))
+                using (StreamWriter writer = File.CreateText(path))// Открываем файл для записи и записываем строку
                 {
                     writer.Write(jsonRole);
                 }
