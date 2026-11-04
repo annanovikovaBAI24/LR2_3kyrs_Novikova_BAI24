@@ -9,7 +9,7 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.Helper
 {
     public class RelayCommand : ICommand
     {
-        private Action<object> execute;     // execute — делегат, который выполняется при нажатии
+        private Action<object> execute;     // execute — делегат, который выполняется при нажатии тест 3
         private Func<object, bool> canExecute;
 
         public event EventHandler CanExecuteChanged
