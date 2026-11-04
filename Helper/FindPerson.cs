@@ -11,7 +11,7 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.Helper
     {
         int id;
 
-        public FindPerson(int id)
+        public FindPerson(int id)//тест 2
         {
             this.id = id;
         }
