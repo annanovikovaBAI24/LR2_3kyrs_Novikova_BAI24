@@ -16,7 +16,7 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.Helper
             this.id = id;
         }
 
-        public bool PersonPredicate(Person person)// Метод PersonPredicate проверяет, совпадает ли Id сотрудника с искомым
+        public bool PersonPredicate(Person person)
         {
             return person.Id == id;
         }
