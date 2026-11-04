@@ -41,6 +41,18 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.View
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
+            tbBirthday.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            clBirthday.GetBindingExpression(DatePicker.SelectedDateProperty)?.UpdateSource();
+
+            if (clBirthday.SelectedDate.HasValue)
+            {
+                PersonDpo p = DataContext as PersonDpo;
+                if (p != null)
+                {
+                    p.Birthday = clBirthday.SelectedDate.Value.ToString("dd.MM.yyyy");
+                }
+            }
+
             DialogResult = true;
         }
 
