@@ -65,12 +65,12 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.Model
         /// <summary>
         /// дата рождения сотрудника
         /// </summary>
-        private DateTime birthday;
+        private string birthday; //изменила дататайм на стринг
 
         /// <summary>
         /// дата рождения сотрудника
         /// </summary>
-        public DateTime Birthday
+        public string Birthday
         {
             get { return birthday; }
             set
@@ -82,7 +82,7 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.Model
 
         public PersonDpo() { }
 
-        public PersonDpo(int id, string roleName, string firstName, string lastName, DateTime birthday)
+        public PersonDpo(int id, string roleName, string firstName, string lastName, string birthday)
         {
             this.Id = id;
             this.RoleName = roleName;
