@@ -48,5 +48,16 @@ namespace LR1_3kyrs_NOVIKOVA_BAI24.View
         {
             DialogResult = false;
         }
+        private void tbBirthday_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)//видимость календаря
+        {
+            if (tbBirthday.Visibility == Visibility.Hidden)
+            {
+                clBirthday.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                clBirthday.Visibility = Visibility.Hidden;
+            }
+        }
     }
 }
