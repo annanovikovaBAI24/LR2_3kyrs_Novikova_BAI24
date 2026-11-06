@@ -11,7 +11,7 @@ using LR1_3kyrs_NOVIKOVA_BAI24.View;
 
 namespace LR1_3kyrs_NOVIKOVA_BAI24.ViewModel
 {
-    public class RoleViewModel : INotifyPropertyChanged
+    public class RoleViewModel : INotifyPropertyChanged//тест
     {
         // Полный путь к файлу данных с должностями
         readonly string path = @"C:\Users\Anna\OneDrive\Desktop\вп 3 курс\LR1_3kyrs_Novikova_BAI24\DataModels\RoleData.json";
